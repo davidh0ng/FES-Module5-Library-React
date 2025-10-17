@@ -8,7 +8,45 @@ import BestBooks from "../components/ui/BestBooks";
 
 const BookInfo = ({ books, addItemToCart }) => {
   const { id } = useParams();
+
+  // safe debug log - id must be defined before we reference it
+  console.log({ id, books, book: books?.find((b) => +b.id === +id) });
+
+  // Guard: books may be undefined while data is loading or not passed in.
+  if (!books || books.length === 0) {
+    return (
+      <div id="books__body">
+        <main id="books__main">
+          <div className="books__container">
+            <div className="row">
+              <h2>Loading...</h2>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   const book = books.find((book) => +book.id === +id);
+
+  // Guard: requested book id might not exist in the list
+  if (!book) {
+    return (
+      <div id="books__body">
+        <main id="books__main">
+          <div className="books__container">
+            <div className="row">
+              <h2>Book not found</h2>
+              <p>The book you're looking for doesn't exist.</p>
+              <Link to="/books" className="book__link">
+                Back to books
+              </Link>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div id="books__body">
